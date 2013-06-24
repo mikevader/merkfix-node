@@ -4,7 +4,7 @@
 	gameId,
 	clientId = 0,
 	cardElements = document.querySelectorAll('.cardcontent'),
-	playerColors = ['#ff0000', '#00ff00', '#0000ff'],
+	playerColors = ['#ff0000', '#00ff00', '#0000ff', '#00ffff', '#ffff00', '#ff00ff'],
 	ClientMemory = function(callback) {
 		var merkfix = new Merkfix(2, 16);
 		this.play = function(index) { callback(merkfix.rotateMemoryCard(index)); };
@@ -34,11 +34,11 @@
 		}
 	};
 
-	function draw2(elm, key) {
+	function draw(elm, key) {
 		elm.classList.add('cardshow');
 		elm.style.backgroundPositionX = key * 6.6666667 + '%';
 	}
-	function clear2(elm) {
+	function clear(elm) {
 		elm.classList.remove('cardshow');
 	}
 	
@@ -47,10 +47,7 @@
 	}
 	
 	function memoryIndexToElement(memoryIndex) {
-	
-		var result = (clientId == 1) ? memoryIndex - 16 : memoryIndex;
-		console.log(result);
-		return result;
+		return (clientId == 1) ? memoryIndex - 16 : memoryIndex;
 	}
 	
 	function refresh(token) {
@@ -64,17 +61,16 @@
 				continue;
 			}
 			if (memorycards[i].rotated) {
-				draw2(cardElements[memoryIndexToElement(i)], memorycards[i].key);
+				draw(cardElements[memoryIndexToElement(i)], memorycards[i].key);
 			} else {
-				clear2(cardElements[memoryIndexToElement(i)]);
+				clear(cardElements[memoryIndexToElement(i)]);
 			}
-		}
-			 
+		} 
 		if (token.indexOfFirstRotated !== undefined && isInPaintArea(token.indexOfFirstRotated)) {
-			draw2(cardElements[memoryIndexToElement(token.indexOfFirstRotated)], memorycards[token.indexOfFirstRotated].key);
+			draw(cardElements[memoryIndexToElement(token.indexOfFirstRotated)], memorycards[token.indexOfFirstRotated].key);
 		}
 		if (token.indexOfSecondRotated !== undefined && isInPaintArea(token.indexOfSecondRotated)) {
-			draw2(cardElements[memoryIndexToElement(token.indexOfSecondRotated)], memorycards[token.indexOfSecondRotated].key);
+			draw(cardElements[memoryIndexToElement(token.indexOfSecondRotated)], memorycards[token.indexOfSecondRotated].key);
 		}
 		elm = document.getElementById('activePlayer');
 		elm.style.backgroundColor =  playerColors[token.activePlayer];
