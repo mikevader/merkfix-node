@@ -7,6 +7,14 @@ body { margin: 0px; }
     width: 100%;
 }
 
+#activePlayer  {
+	height: 3em;
+	width: 3em;
+	background-color: #dddddd;
+	display: inline-block;
+	
+}
+
 .cardcontainer {
     display: inline-block;
     position: relative;

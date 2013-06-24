@@ -24,7 +24,7 @@ io.sockets.on('connection', function (socket) {
 	socket.on('createGame', function (token) {
 		var gameId = token.gameName;
 		if (games.gameId === undefined) {
-			games.gameId = new Merkfix(token.numberOfPlayers, 16);
+			games.gameId = new Merkfix(token.numberOfPlayers, token.numberOfCards);
 			socket.emit('gameCreated', true);
 		} else {
 			socket.emit('gameCreated', false);
