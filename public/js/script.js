@@ -34,7 +34,7 @@
 	function draw(index, memorycards) {
 		var elm = cardElements[index];
 		elm.classList.add('cardshow');
-		elm.style.backgroundPositionX = memorycards[index].key * 14.2857 + '%';
+		elm.style.backgroundPositionX = memorycards[index].key * 6.6666667 + '%';
 	}
 	function refresh(token) {
 		var i, memorycards = token.memorycards,

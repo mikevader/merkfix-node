@@ -33,7 +33,7 @@ body { margin: 0px; }
 .cardshow {
 	background-repeat: no-repeat;
     background-image: url('../img/sprite.png');
-    background-size: 800% 100%;
+    background-size: 1600% 100%;
 }
 
 #menubar {
