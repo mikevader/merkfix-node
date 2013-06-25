@@ -10,20 +10,25 @@
 		this.reset = function() { callback(merkfix.resetGame()); }
 	},
 	ServerMemory = function(callback) {
-		var socket = io.connect(document.location.protocol + '//' + document.location.hostname);
+		var port = document.location.port === '3000' ? '3000' : '8000',
+		socket = io.connect(document.location.protocol + '//' + document.location.hostname + ':' + port);
+		socket.on('update', refresh);
+		socket.on('joined', function(token) {
+			alert(token['memorycards'].length);
 		
-		socket.on('update', function (data) {
-			refresh(data); // Inline?
+			if (token['memorycards'].length == 16) {
+				clientId = 0;
+			}
 		});
 		function joinGame(gameId) {
 			socket.emit('join', gameId);
 		}
 		this.createGame = function(numberOfPlayers, gameName, numberOfCards) {
-			 socket.on('gameCreated', function (data) {
-				alert("Game created");
-				joinGame(gameName);
+			socket.emit('createGame', { 
+				'numberOfPlayers' : numberOfPlayers,
+				'gameName' : gameName, 
+				'numberOfCards' : numberOfCards 
 			});
-			socket.emit('createGame', { 'numberOfPlayers' : numberOfPlayers, 'gameName' : gameName, 'numberOfCards' : numberOfCards });
 		};
 		this.joinGame = joinGame;
 		
@@ -48,10 +53,17 @@
 	function memoryIndexToElement(memoryIndex) {
 		return (clientId == 1) ? memoryIndex - 16 : memoryIndex;
 	}
+	function showCardIfDefined(index, memorycards) {
+		if (index !== undefined && isInPaintArea(index)) {
+			draw(cardElements[memoryIndexToElement(index)], memorycards[index].key);
+		}
+	}
 	function refresh(token) {
 		console.log(JSON.stringify(token));
 		var i, memorycards = token.memorycards,
 		length = memorycards.length,
+		firstRotated = token.indexOfFirstRotated,
+		secondRotated = token.indexOfSecondRotated,
 		elm;
 			
 		for (i = 0; i < length; i++) {
@@ -63,13 +75,10 @@
 			} else {
 				clear(cardElements[memoryIndexToElement(i)]);
 			}
-		} 
-		if (token.indexOfFirstRotated !== undefined && isInPaintArea(token.indexOfFirstRotated)) {
-			draw(cardElements[memoryIndexToElement(token.indexOfFirstRotated)], memorycards[token.indexOfFirstRotated].key);
-		}
-		if (token.indexOfSecondRotated !== undefined && isInPaintArea(token.indexOfSecondRotated)) {
-			draw(cardElements[memoryIndexToElement(token.indexOfSecondRotated)], memorycards[token.indexOfSecondRotated].key);
-		}
+		}	
+		showCardIfDefined(firstRotated, memorycards);
+		showCardIfDefined(secondRotated, memorycards);
+
 		elm = document.getElementById('activePlayer');
 		elm.style.backgroundColor =  playerColors[token.activePlayer];
 		document.getElementById('title').innerHTML = 'P: ' + token.points;
@@ -100,10 +109,10 @@
 	};
 	function joinServerGame() {
 		var gameId = prompt('Game-ID');
+		clientId = 1; // Hack :-(
 		memory = new ServerMemory(refresh);
 		memory.joinGame(gameId);
 		toggleMenu();
-		clientId = 1;
 	};
 	function register(elm, func) {
 		var eventType = ('ontouchstart' in window) ? 'touchstart' : 'click';
