@@ -1,3 +1,4 @@
+#!/bin/env node
 var Merkfix = require('./public/js/memory.js').Merkfix,
     express = require('express'),
 	app = express(),
