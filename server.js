@@ -8,17 +8,19 @@ var Merkfix = require('./public/js/memory.js').Merkfix,
 	games =  {};
 
 app.configure(function(){
-	app.set('port', process.env.PORT || 3000);
+	app.set('port', process.env.OPENSHIFT_NODEJS_PORT || 8080);
 	app.use(express.bodyParser());
 	app.use(express.static(path.join(__dirname, 'public')));
 });  
 
+/*
 io.configure(function () { 
   io.set("transports", ["xhr-polling"]); 
   io.set("polling duration", 10); 
-}); 
+});
+*/ 
 
-server.listen(process.env.PORT || 3000);
+server.listen(process.env.OPENSHIFT_NODEJS_PORT || 8080, process.env.OPENSHIFT_NODEJS_IP);
 
 io.sockets.on('connection', function (socket) {
 
