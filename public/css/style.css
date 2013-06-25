@@ -12,7 +12,6 @@ body { margin: 0px; }
 	width: 3em;
 	background-color: #dddddd;
 	display: inline-block;
-	
 }
 
 .cardcontainer {
@@ -31,17 +30,47 @@ body { margin: 0px; }
 .cell3 { left: 75%; }
 
 .cardcontent {
-    width: 25%;
+	width: 25%;
     height: 25%;
     position: absolute;
-    background-image: url('../img/cardback.png');
-    background-size: cover;
+	-webkit-transform-style: preserve-3d; 
+	-webkit-animation-iteration-count: 1; 
+	-webkit-animation-duration: 1.4s;
 }
 
-.cardshow {
-	background-repeat: no-repeat;
+
+.cardcontent.active  { 
+	-webkit-animation-name: flipIt; 
+	-webkit-transform: rotateY(180deg);
+}
+
+
+
+
+.cardcontent .img {
+
+
+
+	background-image: url('../img/cardback.png');
+}
+
+.cardcontent .photo {
+	
+	-webkit-transform: rotateY(-180deg);
+
+	
+	
     background-image: url('../img/sprite.png');
-    background-size: 1600% 100%;
+    
+}
+
+.cardcontent .img,
+.cardcontent .photo {
+	position: absolute;
+	-webkit-backface-visibility: hidden;
+	width: 100%;
+    height: 100%;
+    background-size: cover;
 }
 
 #menubar {
@@ -76,3 +105,18 @@ body { margin: 0px; }
 	font-size: 1em;
 	padding: 0.5em 0em 0.5em 0em;
 }
+
+
+@-webkit-keyframes flipIt {
+	0%   { 	
+		-webkit-transform: rotateY(0) scale(1); 
+		-webkit-animation-timing-function: ease-in-out; 
+	}
+	35% {
+		-webkit-transform: rotateY(90deg) scale(0.7); 
+	}
+	100% { 
+		-webkit-transform: rotateY(180deg) scale(1); 
+	}
+}
+

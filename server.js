@@ -19,12 +19,17 @@ io.sockets.on('connection', function (socket) {
 		socket.join(gameId);
 		
 		socket.on('play', function (index) {
-			io.sockets.in(gameId).emit('update', games[gameId].rotateMemoryCard(index));
+			var token = games[gameId].rotateMemoryCard(index);
+			io.sockets.in(gameId).emit('update', token);
+			if (token.event === 'LOOSE_ROUND') {
+				setTimeout(function() {
+					io.sockets.in(gameId).emit('update', games[gameId].status());
+				}, 4000);
+			}
 		});	
 		socket.on('reset', function () {
 			io.sockets.in(gameId).emit('update', games[gameId].resetGame());
 		});
-		
 		socket.emit('joined', games[gameId].status());
 	}
 

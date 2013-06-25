@@ -14,15 +14,10 @@
 		socket = io.connect(document.location.protocol + '//' + document.location.hostname + ':' + port);
 		socket.on('update', refresh);
 		socket.on('joined', function(token) {
-			alert(token['memorycards'].length);
-		
 			if (token['memorycards'].length == 16) {
 				clientId = 0;
 			}
 		});
-		function joinGame(gameId) {
-			socket.emit('join', gameId);
-		}
 		this.createGame = function(numberOfPlayers, gameName, numberOfCards) {
 			socket.emit('createGame', { 
 				'numberOfPlayers' : numberOfPlayers,
@@ -30,8 +25,9 @@
 				'numberOfCards' : numberOfCards 
 			});
 		};
-		this.joinGame = joinGame;
-		
+		this.joinGame = function (gameId) {
+			socket.emit('join', gameId);
+		};
 		this.play = function(index) { 
 			socket.emit('play', index); 
 		};
@@ -41,11 +37,11 @@
 	};
 
 	function draw(elm, key) {
-		elm.classList.add('cardshow');
-		elm.style.backgroundPositionX = key * 6.6666667 + '%';
+		elm.querySelector('.photo').style.backgroundPositionX = key * 6.6666667 + '%';
+		elm.classList.add('active');
 	}
 	function clear(elm) { 
-		elm.classList.remove('cardshow');
+		elm.classList.remove('active');
 	}
 	function isInPaintArea(index) {
 		return (clientId == 0 && index < 16) || (clientId == 1 && index >= 16);
@@ -59,7 +55,6 @@
 		}
 	}
 	function refresh(token) {
-		console.log(JSON.stringify(token));
 		var i, memorycards = token.memorycards,
 		length = memorycards.length,
 		firstRotated = token.indexOfFirstRotated,

@@ -45,24 +45,25 @@ var Merkfix = function(nrOfPlayers, numberOfCards) {
 	this.rotateMemoryCard = function(index) {
 		var event, token;
 		if (isCardNotPlayable(index)) { 
-			return createState('notPlayable');
+			return createState('NOT_PLAYABLE');
 		} else if (isFirstCard()){
-			event = 'firstCard';
+			event = 'FIRST_CARD';
 			indexOfFirstRotated = index;
-			indexOfSecondRotated = undefined;  //not needed?
+			indexOfSecondRotated = undefined;
 			return createState(event);
 		} else {
 			indexOfSecondRotated = index;
 			if (memorycards[indexOfFirstRotated].key === memorycards[indexOfSecondRotated].key) {
 				memorycards[indexOfFirstRotated].rotated = true;
 				memorycards[indexOfSecondRotated].rotated = true;
-				event = 'winRound';
+				event = 'WIN_ROUND';
 				points[activePlayer] = points[activePlayer] + 1;
+				token = createState(event);
 			} else {
+				event = 'LOOSE_ROUND';
+				token = createState(event);
 				activePlayer = (activePlayer + 1) % numberOfPlayers;
-				event = 'looseRound';
 			}
-			token = createState(event);
 			indexOfFirstRotated = undefined;
 			indexOfSecondRotated = undefined;
 			return token;
@@ -72,7 +73,7 @@ var Merkfix = function(nrOfPlayers, numberOfCards) {
 		return init(numberOfCards);
 	};
 	this.status = function() {
-		return createState('status');
+		return createState('STATUS');
 	}
 	init(numberOfCards);
 };
