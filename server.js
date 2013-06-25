@@ -3,7 +3,7 @@
 var express = require('express');
 var fs      = require('fs');
 
-
+console.log('test log');
 /**
  *  Define the sample application.
  */
