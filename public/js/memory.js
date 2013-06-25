@@ -71,7 +71,9 @@ var Merkfix = function(nrOfPlayers, numberOfCards) {
 	this.resetGame = function() {
 		return init(numberOfCards);
 	};
-
+	this.status = function() {
+		return createState('status');
+	}
 	init(numberOfCards);
 };
 // To use inside node.js and as standalone.

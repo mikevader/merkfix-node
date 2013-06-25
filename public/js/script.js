@@ -1,7 +1,6 @@
 (function(global) {
 	"use strict";
 	var memory,
-	gameId,
 	clientId = 0,
 	cardElements = document.querySelectorAll('.cardcontent'),
 	playerColors = ['#ff0000', '#00ff00', '#0000ff', '#00ffff', '#ffff00', '#ff00ff'],
@@ -12,12 +11,13 @@
 	},
 	ServerMemory = function(callback) {
 		var socket = io.connect(document.location.protocol + '//' + document.location.hostname);
-		function joinGame(id) {
-			gameId = id;
-			socket.on(gameId, function (data) {
-				refresh(data);
-			});
-		};
+		
+		socket.on('update', function (data) {
+			refresh(data); // Inline?
+		});
+		function joinGame(gameId) {
+			socket.emit('join', gameId);
+		}
 		this.createGame = function(numberOfPlayers, gameName, numberOfCards) {
 			 socket.on('gameCreated', function (data) {
 				alert("Game created");
@@ -26,11 +26,12 @@
 			socket.emit('createGame', { 'numberOfPlayers' : numberOfPlayers, 'gameName' : gameName, 'numberOfCards' : numberOfCards });
 		};
 		this.joinGame = joinGame;
+		
 		this.play = function(index) { 
-			socket.emit('play', {gameId : gameId, index : index}); 
+			socket.emit('play', index); 
 		};
 		this.reset = function() { 
-			socket.emit('reset', {gameId : gameId});
+			socket.emit('reset', {});
 		}
 	};
 
@@ -38,18 +39,15 @@
 		elm.classList.add('cardshow');
 		elm.style.backgroundPositionX = key * 6.6666667 + '%';
 	}
-	function clear(elm) {
+	function clear(elm) { 
 		elm.classList.remove('cardshow');
 	}
-	
 	function isInPaintArea(index) {
 		return (clientId == 0 && index < 16) || (clientId == 1 && index >= 16);
 	}
-	
 	function memoryIndexToElement(memoryIndex) {
 		return (clientId == 1) ? memoryIndex - 16 : memoryIndex;
 	}
-	
 	function refresh(token) {
 		console.log(JSON.stringify(token));
 		var i, memorycards = token.memorycards,

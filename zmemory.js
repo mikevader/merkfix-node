@@ -1,4 +1,3 @@
-// TODO clean up var
 var Merkfix = require('./public/js/memory.js').Merkfix,
     express = require('express'),
 	app = express(),
@@ -21,23 +20,19 @@ io.configure(function () {
 server.listen(process.env.PORT || 3000);
 
 io.sockets.on('connection', function (socket) {
-	socket.on('createGame', function (token) {
-		var gameId = token.gameName;
-		if (games.gameId === undefined) {
-			games.gameId = new Merkfix(token.numberOfPlayers, token.numberOfCards);
-			socket.emit('gameCreated', true);
-		} else {
-			socket.emit('gameCreated', false);
-		}
+
+	socket.on('createGame', function (json) {
+		var gameId = json.gameName;
+		games[gameId] = new Merkfix(json.numberOfPlayers, json.numberOfCards);
+		socket.emit('gameCreated', true);
 	});
-	socket.on('play', function (token) {
-		var gameId = token.gameId, index = token.index,
-		result = games.gameId.rotateMemoryCard(index);
-		io.sockets.emit(gameId, result);
-	});
-	socket.on('reset', function (token) {
-		var gameId = token.gameId,
-		result = games.gameId.resetGame();
-		io.sockets.emit(gameId, result);
+	socket.on('join', function (gameId) {
+		socket.on('play', function (index) {
+			io.sockets.emit('update', games[gameId].rotateMemoryCard(index));
+		});
+		socket.on('reset', function () {
+			io.sockets.emit('update', games[gameId].resetGame());
+		});
+		socket.emit('joined', games[gameId].status());
 	});
 });
