@@ -21,12 +21,21 @@ server.listen(process.env.PORT || 3000);
 
 io.sockets.on('connection', function (socket) {
 
+	console.log('------------------------\n CONNECTION \n------------------------ ');
+
+	socket.on('c', function() {
+		console.log('------------------------\n C WORKED \n------------------------ ');
+	});
+	
 	socket.on('createGame', function (json) {
+		
 		var gameId = json.gameName;
 		games[gameId] = new Merkfix(json.numberOfPlayers, json.numberOfCards);
 		socket.emit('gameCreated', true);
 	});
 	socket.on('join', function (gameId) {
+		console.log('game joined');
+	
 		socket.on('play', function (index) {
 			io.sockets.emit('update', games[gameId].rotateMemoryCard(index));
 		});
