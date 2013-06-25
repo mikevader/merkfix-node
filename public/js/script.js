@@ -10,7 +10,7 @@
 		this.reset = function() { callback(merkfix.resetGame()); }
 	},
 	ServerMemory = function(callback) {
-		var socket = io.connect(document.location.protocol + '//' + document.location.hostname);
+		var socket = io.connect(document.location.protocol + '//' + document.location.hostname + ':8000');
 		
 		socket.on('update', function (data) {
 			refresh(data); // Inline?
