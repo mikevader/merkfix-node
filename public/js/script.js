@@ -35,7 +35,17 @@
 			socket.emit('reset', {});
 		}
 	};
-
+	
+	function swap(elm1, elm2) {
+		// Implement swapping.
+	}
+	function shuffleAnimation() {
+		var array = new Array(16), i;
+		for (i = 0; i < array.length; i++) {
+			array[i] = i;
+		}
+		for(var j, x, i = array.length; i; j = parseInt(Math.random() * i), x = array[--i], array[i] = array[j], array[j] = x);
+	}
 	function draw(elm, key) {
 		elm.querySelector('.photo').style.backgroundPositionX = key * 6.6666667 + '%';
 		elm.classList.add('active');

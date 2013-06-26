@@ -16,6 +16,10 @@ server.listen(process.env.OPENSHIFT_NODEJS_PORT || 3000, process.env.OPENSHIFT_N
 io.sockets.on('connection', function (socket) {
 
 	function joinClient(gameId) {
+		if (gameId === undefined || gameId === null || games[gameId] === undefined) {
+			console.error("GameId is null, undefined or game does not exist");
+			return;
+		}
 		socket.join(gameId);
 		
 		socket.on('play', function (index) {
@@ -37,6 +41,5 @@ io.sockets.on('connection', function (socket) {
 		games[json.gameName] = new Merkfix(json.numberOfPlayers, json.numberOfCards);
 		joinClient(json.gameName);
 	});
-	
 	socket.on('join', joinClient);
 });
