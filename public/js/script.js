@@ -35,20 +35,18 @@
 			socket.emit('reset', {});
 		}
 	};
-	function getPosition(element) {
-		var xPosition = 0;
-		var yPosition = 0;
-	  
-		while(element) {
-			xPosition += (element.offsetLeft - element.scrollLeft + element.clientLeft);
-			yPosition += (element.offsetTop - element.scrollTop + element.clientTop);
-			element = element.offsetParent;
-		}
-		return { x: xPosition, y: yPosition };
-	}	
-	
-	function swap(elm1, elm2) {
-		elm1.classList.add('move');
+	function swap(index1, index2) {
+		var elm1 = cardElements[index1], 
+		elm2 = cardElements[index2],
+		rowElm1 = Math.floor(index1 / 4),
+		rowElm2 = Math.floor(index2 / 4),
+		colElm1 = index1 % 4,
+		colElm2 = index2 % 4;
+		
+		
+		elm1.style.webkitTransform = 'translateX(' + ((colElm2 - colElm1) * 100) + '%) translateY(' + ((rowElm2 - rowElm1) * 100) + '%)';
+		elm2.style.webkitTransform = 'translateX(' + ((colElm1 - colElm2) * 100) + '%) translateY(' + ((rowElm1 - rowElm2) * 100) + '%)';
+		
 	}
 	function shuffleAnimation() {
 		var array = new Array(16), i;
@@ -57,7 +55,7 @@
 		}
 		for(var j, x, i = array.length; i; j = parseInt(Math.random() * i), x = array[--i], array[i] = array[j], array[j] = x);
 		for(i = 0; i < array.length; i+= 2) {
-			swap(cardElements[i], cardElements[i + 1]);
+			swap(array[i], array[i + 1]);
 		}
 	}
 	function draw(elm, key) {

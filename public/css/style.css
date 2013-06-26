@@ -34,12 +34,7 @@ body { margin: 0px; }
     height: 25%;
     position: absolute;
 	-webkit-animation-duration: 1.4s;
-	-webkit-transition-duration: 3s;
-}
-
-.move {
-	
-	-webkit-transform: translateY(100px) translateX(0px);
+	-webkit-transition-duration: 1s;
 }
 
 .cardcontent.active { 
