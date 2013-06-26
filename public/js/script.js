@@ -35,9 +35,20 @@
 			socket.emit('reset', {});
 		}
 	};
+	function getPosition(element) {
+		var xPosition = 0;
+		var yPosition = 0;
+	  
+		while(element) {
+			xPosition += (element.offsetLeft - element.scrollLeft + element.clientLeft);
+			yPosition += (element.offsetTop - element.scrollTop + element.clientTop);
+			element = element.offsetParent;
+		}
+		return { x: xPosition, y: yPosition };
+	}	
 	
 	function swap(elm1, elm2) {
-		// Implement swapping.
+		elm1.classList.add('move');
 	}
 	function shuffleAnimation() {
 		var array = new Array(16), i;
@@ -45,6 +56,9 @@
 			array[i] = i;
 		}
 		for(var j, x, i = array.length; i; j = parseInt(Math.random() * i), x = array[--i], array[i] = array[j], array[j] = x);
+		for(i = 0; i < array.length; i+= 2) {
+			swap(cardElements[i], cardElements[i + 1]);
+		}
 	}
 	function draw(elm, key) {
 		elm.querySelector('.photo').style.backgroundPositionX = key * 6.6666667 + '%';
@@ -99,11 +113,12 @@
 	function resetGame() {
 		memory.reset();
 		toggleMenu();
+		shuffleAnimation();
 	};
 	function newServerGame() {
-		var numberOfPlayers = prompt('Anzahl Spieler');
-		var gameName = prompt('Spielname');
-		var numberOfCards = prompt('Anzahl Karten');
+		var numberOfPlayers = prompt('Anzahl Spieler', 2);
+		var gameName = prompt('Spielname', 'mab');
+		var numberOfCards = prompt('Anzahl Karten', 16);
 		if (numberOfCards !== '32') {
 			numberOfCards = 16;
 		}

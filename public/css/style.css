@@ -33,37 +33,30 @@ body { margin: 0px; }
 	width: 25%;
     height: 25%;
     position: absolute;
+	-webkit-animation-duration: 1.4s;
+	-webkit-transition-duration: 3s;
+}
+
+.move {
+	
+	-webkit-transform: translateY(100px) translateX(0px);
+}
+
+.cardcontent.active { 
 	-webkit-transform-style: preserve-3d; 
 	-webkit-animation-iteration-count: 1; 
 	-webkit-animation-duration: 1.4s;
-}
-
-
-.cardcontent.active  { 
 	-webkit-animation-name: flipIt; 
 	-webkit-transform: rotateY(180deg);
 }
-
-
-
-
 .cardcontent .img {
-
-
-
 	background-image: url('../img/cardback.png');
 }
 
 .cardcontent .photo {
-	
 	-webkit-transform: rotateY(-180deg);
-
-	
-	
     background-image: url('../img/sprite.png');
-    
 }
-
 .cardcontent .img,
 .cardcontent .photo {
 	position: absolute;
@@ -99,14 +92,11 @@ body { margin: 0px; }
     -webkit-transform: translate(100%, 0%);
     /* top: 0em; Selber Effekt. Schlechte Performance */
 }
-
 #menu .button {
 	background-color: #dddddd;
 	font-size: 1em;
 	padding: 0.5em 0em 0.5em 0em;
 }
-
-
 @-webkit-keyframes flipIt {
 	0%   { 	
 		-webkit-transform: rotateY(0) scale(1); 
