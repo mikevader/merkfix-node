@@ -36,15 +36,16 @@ io.sockets.on('connection', function (socket) {
 		socket.on('reset', function () {
 			io.sockets.in(gameId).emit('update', games[gameId].game.resetGame());
 		});
-		socket.emit('joined', { 'joinerId' : games[gameId].joined++, 'numberOfCards' : games[gameId].numberOfCards});
+		
+		var token = games[gameId].game.status();
+		token.joinerId = games[gameId].joined++;
+		socket.emit('joined', token);
 	}
 
 	socket.on('createGame', function (json) {
 		games[json.gameName] =  {
 			game : new Merkfix(json.numberOfPlayers, json.numberOfCards),
-			joined : 0,
-			players: json.numberOfPlayers,
-			nrOfCards : json.numberOfCards
+			joined : 0
 		};
 		joinClient(json.gameName);
 	});

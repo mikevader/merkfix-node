@@ -14,7 +14,8 @@
 		socket = io.connect(document.location.protocol + '//' + document.location.hostname + ':' + port);
 		socket.on('update', refresh);
 		socket.on('joined', function(gameInfo) { 
-			clientId = (gameInfo.numberOfCards === 16) ? 0 : gameInfo.joinerId;
+			clientId = (gameInfo.memorycards.length === 16) ? 0 : gameInfo.joinerId;
+			refresh(gameInfo);
 		});
 		this.createGame = function(numberOfPlayers, gameName, numberOfCards) {
 			socket.emit('createGame', { 
