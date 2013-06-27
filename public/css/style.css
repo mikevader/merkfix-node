@@ -37,7 +37,6 @@ body { margin: 0px; }
 }
 
 .cardcontent.move{
-
 	-webkit-transition-duration: 1s;
 	-webkit-transition-timing-function: ease-in-out; 
 }
@@ -50,6 +49,7 @@ body { margin: 0px; }
 	-webkit-transform: rotateY(180deg);
 }
 .cardcontent .img {
+	cursor: pointer;
 	background-image: url('../img/cardback.png');
 }
 
@@ -65,35 +65,6 @@ body { margin: 0px; }
     height: 100%;
     background-size: cover;
 }
-
-#infotext {
-	top: 40%;
-	width: 100%;
-	position: absolute;
-	background-color: #ff0000;
-	font-size: 8em;
-	z-index: 1;
-	left: -100%;
-}
-
-#infotext2 {
-	top: 40%;
-	width: 100%;
-	position: absolute;
-	background-color: #ff0000;
-	font-size: 8em;
-	z-index: 1;
-	left: -200%;
-}
-
-
-#infotext.move,
-#infotext2.move  {
-	 -webkit-transform: translate(300%, 0%);
-	 -webkit-transition-duration: 5s;
-	 -webkit-transition-timing-function: linear; 
-}
-
 
 #menubar {
     position: absolute;

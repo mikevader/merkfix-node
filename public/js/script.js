@@ -5,7 +5,7 @@
 	cardElements = document.querySelectorAll('.cardcontent'),
 	playerColors = ['#ff0000', '#00ff00', '#0000ff', '#00ffff', '#ffff00', '#ff00ff'],
 	ClientMemory = function(callback) {
-		var merkfix = new Merkfix(2, 16);
+		var merkfix = new Merkfix(1, 16);
 		this.play = function(index) { callback(merkfix.rotateMemoryCard(index)); };
 		this.reset = function() { callback(merkfix.resetGame()); }
 	},
@@ -13,10 +13,8 @@
 		var port = document.location.port === '3000' ? '3000' : '8000',
 		socket = io.connect(document.location.protocol + '//' + document.location.hostname + ':' + port);
 		socket.on('update', refresh);
-		socket.on('joined', function(token) {
-			if (token['memorycards'].length == 16) {
-				clientId = 0;
-			}
+		socket.on('joined', function(gameInfo) { 
+			clientId = (gameInfo.numberOfCards === 16) ? 0 : gameInfo.joinerId;
 		});
 		this.createGame = function(numberOfPlayers, gameName, numberOfCards) {
 			socket.emit('createGame', { 
@@ -64,17 +62,21 @@
 		}, 1300);
 	}
 	function draw(elm, key) {
-		elm.querySelector('.photo').style.backgroundPositionX = key * 6.6666667 + '%';
+		elm.querySelector('.photo').style.backgroundPositionX = key * 4.3478261 + '%'; // 100 / 23
 		elm.classList.add('active');
 	}
 	function clear(elm) { 
 		elm.classList.remove('active');
 	}
 	function isInPaintArea(index) {
-		return (clientId == 0 && index < 16) || (clientId == 1 && index >= 16);
+		switch(clientId) {
+			case 0: return index < 16;
+			case 1: return index >= 16 && index < 32;
+			case 2: return index >= 32;
+		}
 	}
 	function memoryIndexToElement(memoryIndex) {
-		return (clientId == 1) ? memoryIndex - 16 : memoryIndex;
+		return memoryIndex - (clientId * 16);
 	}
 	function showCardIfDefined(index, memorycards) {
 		if (index !== undefined && isInPaintArea(index)) {
@@ -133,17 +135,12 @@
 		var numberOfPlayers = prompt('Anzahl Spieler', 2);
 		var gameName = prompt('Spielname', 'mab');
 		var numberOfCards = prompt('Anzahl Karten', 16);
-		if (numberOfCards !== '32') {
-			numberOfCards = 16;
-		}
 		memory = new ServerMemory(refresh);
 		memory.createGame(numberOfPlayers, gameName, numberOfCards);
 		toggleMenu();
-		clientId = 0;
 	};
 	function joinServerGame() {
-		var gameId = prompt('Game-ID');
-		clientId = 1; // Hack :-(
+		var gameId = prompt('Game-ID', 'mab');
 		memory = new ServerMemory(refresh);
 		memory.joinGame(gameId);
 		toggleMenu();
