@@ -28,7 +28,7 @@ io.sockets.on('connection', function (socket) {
 			if (token.event === 'LOOSE_ROUND') {
 				setTimeout(function() {
 					io.sockets.in(gameId).emit('update', games[gameId].status());
-				}, 4000);
+				}, 3000);
 			}
 		});	
 		socket.on('reset', function () {

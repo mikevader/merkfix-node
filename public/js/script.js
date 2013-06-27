@@ -42,11 +42,10 @@
 		rowElm2 = Math.floor(index2 / 4),
 		colElm1 = index1 % 4,
 		colElm2 = index2 % 4;
-		
-		
+		elm1.classList.add('move');
+		elm2.classList.add('move');
 		elm1.style.webkitTransform = 'translateX(' + ((colElm2 - colElm1) * 100) + '%) translateY(' + ((rowElm2 - rowElm1) * 100) + '%)';
 		elm2.style.webkitTransform = 'translateX(' + ((colElm1 - colElm2) * 100) + '%) translateY(' + ((rowElm1 - rowElm2) * 100) + '%)';
-		
 	}
 	function shuffleAnimation() {
 		var array = new Array(16), i;
@@ -57,6 +56,12 @@
 		for(i = 0; i < array.length; i+= 2) {
 			swap(array[i], array[i + 1]);
 		}
+		setTimeout(function() {
+			for (i = 0; i < cardElements.length; i++) {
+				//cardElements[i].style.webkitTransform = 'none';
+				//cardElements[i].classList.remove('move');
+			}
+		}, 1300);
 	}
 	function draw(elm, key) {
 		elm.querySelector('.photo').style.backgroundPositionX = key * 6.6666667 + '%';
@@ -99,6 +104,17 @@
 		elm = document.getElementById('activePlayer');
 		elm.style.backgroundColor =  playerColors[token.activePlayer];
 		document.getElementById('title').innerHTML = 'P: ' + token.points;
+		/*
+		if (firstRotated !== undefined) {
+			
+			if (clientId === 0) {
+				document.getElementById('infotext').classList.add('move');
+			} else {
+				document.getElementById('infotext2').classList.add('move');
+			}
+		}
+		*/
+		
 	}
 	function createClickHandler(index) {
 		return function(e) {
@@ -136,6 +152,11 @@
 		var eventType = ('ontouchstart' in window) ? 'touchstart' : 'click';
 		elm.addEventListener(eventType, func, true);
 	};
+	function resize() {
+		var d = document.getElementById('playground'), width;
+		width = (d.offsetWidth > d.offsetHeight) ?  d.offsetHeight - 4 + 'px' : '100%';
+		document.getElementById('cardcontainer').style.width = width;
+	}
 	(function init() {
 		var i, allCardElements = document.querySelectorAll('#playground .cardcontent');
 		for (i = 0; i < allCardElements.length; i++) { register(allCardElements[i], createClickHandler(i))};
@@ -144,7 +165,9 @@
 		register(document.getElementById('newservergame'), newServerGame);
 		register(document.getElementById('joinservergame'), joinServerGame);
 		register(document, function(e) {e.preventDefault();});
+		window.addEventListener('resize', resize);
 		memory = new ClientMemory(refresh);
+		resize();
 	})();
 })(window);
 
