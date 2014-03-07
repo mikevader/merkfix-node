@@ -27,4 +27,4 @@ Offene Punkte
 	- Mehr als zwei Spieler
 - In-App Purchase für Multiplayer über Server?
 - Wie viel Spieler verträgt eine Server-Instanz?
-
+- Anleitung Server deployment. (Deployment skripts)
